@@ -10,7 +10,7 @@ ACCESS_SECRET = ''
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
-api = tweepy.API(auth)
+api = tweepy.API(auth, wait_on_rate_limit=True)
 
 def retrieve_last_seen_id(file_name):
     f_read = open(file_name, 'r')
@@ -24,11 +24,10 @@ def store_last_seen_id(last_seen_id, file_name):
     f_write.close()
     return
 
-last = retrieve_last_seen_id('last.txt')
-mentions = api.mentions_timeline(last)
-mentions.reverse()
-
 def action():
+    last = retrieve_last_seen_id('last.txt')
+    mentions = api.mentions_timeline(last)
+    mentions.reverse()
     print('Actuating')
     for mention in mentions:
         if len(mention.text) > 12:
@@ -53,5 +52,5 @@ def action():
 
 while True:
     action()
-    time.sleep(5)
+    time.sleep(30)
 
