@@ -3,10 +3,10 @@ from mal import AnimeSearch
 import urllib.request
 import time
 
-CONSUMER_KEY = 'F0IKzzEmB4lVn6vIdh8uTKR77'
-CONSUMER_SECRET = 'VD14stheIqUNyT8nh0vei2yZhwspiE2SuB31v9Nqx3i0OjRpOw'
-ACCESS_KEY = '1341981535407403008-LEeyVm5nplsPJUV2LyoyczxZJ1IjJc'
-ACCESS_SECRET = 'E5rsKP2xRYV61R92bpM6TPIfkDeM3hNErhTTKT6qL72ZT'
+CONSUMER_KEY = ''
+CONSUMER_SECRET = ''
+ACCESS_KEY = ''
+ACCESS_SECRET = ''
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
@@ -37,10 +37,13 @@ def action():
             if len(search.results) > 0:
                 
                 ret = search.results[0].title + '\n' + str(search.results[0].score) + '\n' + search.results[0].synopsis
+                
+                #Posts thumbnail associated with the search result. Not available in running example as tunnel connections aren't allowed for deployment.
                 img = search.results[0].image_url
                 urllib.request.urlretrieve(img, 'img.jpg')
                 media = api.media_upload('img.jpg')
                 media_array = [media.media_id_string]
+                
                 api.update_status('@' + mention.user.screen_name + ' ' + ret, mention.id, media_ids=media_array)
             else:
                 api.update_status('@' + mention.user.screen_name + ' Anime not found!', mention.id)
